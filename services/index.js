@@ -1,1 +1,1 @@
-module.exports.authService = require('./auth.service');
+module.exports.weatherService = require('./weather.service');

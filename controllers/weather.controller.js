@@ -1,13 +1,13 @@
-const { authService } = require('../services');
+const { weatherService } = require('../services');
 const { weatherCheck } = require('../validator/validation')
 const { CONSTANT_MSG } = require('../config/constant_messages');
 
 exports.weatherCheck = async (req, res) => {
   try {
     
-    //Checking validation and calling weather and sms services
+    //Checking validation and call weather and sms services
     await weatherCheck.validateAsync(req.body);
-    const weather = await authService.weatherCheck(req.body);
+    const weather = await weatherService.weatherCheck(req.body);
     return res.status(weather.statusCode).send(weather);
 
   } catch (error) {

@@ -10,10 +10,13 @@ module.exports.weatherCheck = async (city) => {
             method: 'POST',
             url: url
         };
+
         const weather = await axios(config)
-        return weather.data
+        return weather;
+
     } catch (error) {
         console.log('error', error);
+
         return {
             statusCode: 500,
             status: CONSTANT_MSG.STATUS.ERROR,
@@ -23,9 +26,10 @@ module.exports.weatherCheck = async (city) => {
 }
 
 //Sending SMS for mobile number
-module.exports.sendSMS = async (mobile, weather) => {
+module.exports.sendSMS = async (smsDetails, weather) => {
     try {
         const token = await accessToken()
+        const smsContent = CONSTANT_MSG.SMS_CONTENT.replace('{city}', smsDetails.city)
         const config = {
             "url": CONSTANT_MSG.SMS_URL,
             "method": "POST",
@@ -36,14 +40,17 @@ module.exports.sendSMS = async (mobile, weather) => {
             data:
             {
                 "from": "amdTelecom",
-                "to":  mobile,
-                "body": "Hi Malini, Current weather condition is "+ weather.main.temp + ' C'
+                "to": smsDetails.mobile,
+                "body": smsContent + (Number(weather.main.temp)-273.15).toFixed(2) + ' C'
             }
         };
+
         const sms = await axios(config)
-        return sms.data
+        return sms;
+
     } catch (error) {
         console.log('error', error);
+
         return {
             statusCode: 500,
             status: CONSTANT_MSG.STATUS.ERROR,
@@ -65,10 +72,13 @@ const accessToken = async () => {
                 "content-type": "application/x-www-form-urlencoded"
             }
         };
+
         const gstAccessToken = await axios(config)
-        return gstAccessToken
+        return gstAccessToken;
+
     } catch (error) {
         console.log('error', error);
+        
         return {
             statusCode: 500,
             status: CONSTANT_MSG.STATUS.ERROR,
